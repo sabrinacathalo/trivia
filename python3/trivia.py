@@ -4,10 +4,10 @@ import datetime
 class Game:
     def __init__(self):
         self.players = []
+        self.players_leaderboard = []
         self.places = [0] * 6
         self.purses = [0] * 6
         self.in_penalty_box = [0] * 6
-
         self.pop_questions = []
         self.science_questions = []
         self.sports_questions = []
@@ -166,16 +166,20 @@ class Game:
         return True
 
     def _did_player_win(self):
-        return not (self.purses[self.current_player] == 6)
+        if self.purses[self.current_player] == 6:
+            self.players_leaderboard.append(self.current_player)
+            print(self.players[(self.current_player)] + ' a gagné !!!')
 
+        return not (self.purses[self.current_player] == 6 and len(self.players_leaderboard) == len(self.players))
 
+from gettext import bind_textdomain_codeset
 from random import randrange
 
 if __name__ == '__main__':
     not_a_winner = False
 
     game = Game()
-
+        
     game.add('Chet')
     game.add('Pat')
     game.add('Sue')
@@ -189,3 +193,6 @@ if __name__ == '__main__':
             not_a_winner = game.was_correctly_answered()
 
         if not not_a_winner: break
+    print('1st : ' + str(game.players[game.players_leaderboard[0]]) + '\n' + '2nd : ' + str(game.players[game.players_leaderboard[1]]) + '\n' + '3rd : ' + str(game.players[game.players_leaderboard[2]]))
+    
+    
