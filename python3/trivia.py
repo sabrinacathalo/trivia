@@ -11,6 +11,18 @@ class Game:
         self.science_questions = []
         self.sports_questions = []
         self.rock_questions = []
+        self.categories = [
+            "Rock",
+            "Pop",
+            "Rap",
+            "Techno",
+            "Science",
+            "Sport",
+            "Philosophy",
+            "Litterature",
+            "Geography",
+            "People"
+        ]
 
         self.current_player = 0
         self.is_getting_out_of_penalty_box = False
