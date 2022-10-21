@@ -128,9 +128,9 @@ class Game:
             self.number_correct_question[self.current_player] += 1;
             if(self.number_correct_question[self.current_player]==3):
                     choosenPlayerName = ""
-                    while choosenPlayerName not in ["Chet", "Pat", "Sue"]:
+                    while choosenPlayerName not in self.players:
                         print("Choose a player to send in prison between "+str(self.players));
-                        choosenPlayerName = input("Choose ? : [Chet, Pat, Sue]" )
+                        choosenPlayerName = input("Choose ? : "+str(self.players))
                         try:
                             if self.current_player == self.players.index(choosenPlayerName):
                                 print("You can't send yourself to penalty box !")  
@@ -193,6 +193,7 @@ if __name__ == '__main__':
             not_a_winner = game.was_correctly_answered()
 
         if not not_a_winner: break
-    print('1st : ' + str(game.players[game.players_leaderboard[0]]) + '\n' + '2nd : ' + str(game.players[game.players_leaderboard[1]]) + '\n' + '3rd : ' + str(game.players[game.players_leaderboard[2]]))
-    
+        
+    for x in game.players_leaderboard:
+        print(str(x+1) + 'st : ' + str(game.players[game.players_leaderboard[x-1]])) 
     
