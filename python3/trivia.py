@@ -1,11 +1,13 @@
 #!/usr/bin/env python3
 
+from yaml import scan
+
+
 class Game:
     def __init__(self):
         self.players = []
         self.places = [0] * 6
         self.purses = [0] * 6
-        self.in_penalty_box = [0] * 6
 
         self.pop_questions = []
         self.science_questions = []
@@ -15,6 +17,12 @@ class Game:
         self.current_player = 0
         self.nextCategory = None
         self.is_getting_out_of_penalty_box = False
+
+        self.number_of_cell = int(input("How many cells do you want ?\n"))
+        if self.number_of_cell == 0:
+            self.in_penalty_box = []
+        else:
+            self.in_penalty_box = [0] * self.number_of_cell
 
         for i in range(50):
             self.pop_questions.append("Pop Question %s" % i)
@@ -27,6 +35,9 @@ class Game:
 
     def is_playable(self):
         return self.how_many_players >= 2
+
+    def free_prison(self):
+        self.in_penalty_box.clear()
 
     def add(self, player_name):
         self.players.append(player_name)
@@ -140,6 +151,9 @@ class Game:
 
         while self.nextCategory not in ["Pop", "Science", "Sports", "Rock"]:
             self.nextCategory = input("next category ? : [Pop, Science, Sports, Rock]" )
+
+        if self.number_of_cell != 0 and self.in_penalty_box.len() == self.number_of_cell:
+            self.free_prison()
         
         print(self.players[self.current_player] + " was sent to the penalty box")
         self.in_penalty_box[self.current_player] = True
