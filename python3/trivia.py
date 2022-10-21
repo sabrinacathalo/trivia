@@ -13,6 +13,7 @@ class Game:
         self.rock_questions = []
 
         self.current_player = 0
+        self.nextCategory = None
         self.is_getting_out_of_penalty_box = False
 
         for i in range(50):
@@ -82,6 +83,9 @@ class Game:
 
     @property
     def _current_category(self):
+
+        if self.nextCategory is not None: return self.nextCategory
+
         if self.places[self.current_player] == 0: return 'Pop'
         if self.places[self.current_player] == 4: return 'Pop'
         if self.places[self.current_player] == 8: return 'Pop'
@@ -94,6 +98,8 @@ class Game:
         return 'Rock'
 
     def was_correctly_answered(self):
+
+        self.nextCategory = None
         if self.in_penalty_box[self.current_player]:
             if self.is_getting_out_of_penalty_box:
                 print('Answer was correct!!!!')
@@ -132,6 +138,10 @@ class Game:
 
     def wrong_answer(self):
         print('Question was incorrectly answered')
+
+        while self.nextCategory not in ["Pop", "Science", "Sports", "Rock"]:
+            self.nextCategory = input("next category ? : [Pop, Science, Sports, Rock]" )
+        
         print(self.players[self.current_player] + " was sent to the penalty box")
         self.in_penalty_box[self.current_player] = True
 
