@@ -57,6 +57,9 @@ class Game:
     def get_category(self):
         return self.current_player_category[self.current_player-2]
 
+    def set_category(self, category):
+        self.current_player_category[self.current_player-2] = category
+
     def is_playable(self):
         return self.how_many_players >= 2
 
@@ -170,8 +173,8 @@ class Game:
     def wrong_answer(self):
         print('Question was incorrectly answered')
 
-        while self.nextCategory not in ["Pop", "Science", "Sports", "Rock"]:
-            self.nextCategory = input("next category ? : [Pop, Science, Sports, Rock]" )
+        while self.get_category() not in ["Pop", "Science", "Sports", "Rock"]:
+            self.set_category(input("next category ? : [Pop, Science, Sports, Rock]" ))
 
         print(self.players[self.current_player] + " was sent to the penalty box")
         self.in_penalty_box[self.current_player] = True
