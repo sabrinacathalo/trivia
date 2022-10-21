@@ -183,12 +183,6 @@ if __name__ == '__main__':
     while True:
         game.roll(randrange(5) + 1)
 
-        now = datetime.datetime.now()
-        if now.hour == 12 and now.minute == 0 and game._current_category == 'Rock': 
-            print(now)
-            print(game._current_category)
-            input()
-
         if randrange(9) == 7:
             not_a_winner = game.wrong_answer()
         else:
