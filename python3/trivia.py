@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import random as randomLucas
 
 class Game:
     def __init__(self):
@@ -6,6 +7,7 @@ class Game:
         self.places = [0] * 6
         self.purses = [0] * 6
         self.in_penalty_box = [0] * 6
+        self.time_got_prison = 1 #nombre de fois que le joueur est allée en prison +1 à chaque fois qu'il sort.
 
         self.pop_questions = []
         self.science_questions = []
@@ -47,9 +49,10 @@ class Game:
         print("They have rolled a %s" % roll)
 
         if self.in_penalty_box[self.current_player]:
-            if roll % 2 != 0:
+            #Si c'est impare et Si le joueur a (1/(le nombre de fois qu'il est allée en prison)*100) % de chance d'aller en prison
+            if roll % 2 != 0 | randomLucas.randint(0, 100) > ((1/self.time_got_prison)*100): 
                 self.is_getting_out_of_penalty_box = True
-
+                print("%s nombre de que le joueur est allée en prison est : " % self.time_got_prison )
                 print("%s is getting out of the penalty box" % self.players[self.current_player])
                 self.places[self.current_player] = self.places[self.current_player] + roll
                 if self.places[self.current_player] > 11:
@@ -63,6 +66,9 @@ class Game:
             else:
                 print("%s is not getting out of the penalty box" % self.players[self.current_player])
                 self.is_getting_out_of_penalty_box = False
+                
+                self.time_got_prison =+ 1
+                
         else:
             self.places[self.current_player] = self.places[self.current_player] + roll
             if self.places[self.current_player] > 11:
