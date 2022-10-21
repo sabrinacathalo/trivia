@@ -123,7 +123,7 @@ class Game:
 
         else:
 
-            print("Answer was corrent!!!!")
+            print("Answer was correct!!!!")
             self.number_correct_question[self.current_player] += 1;
             print(self.number_correct_question)
             if(self.number_correct_question[self.current_player]==3):
