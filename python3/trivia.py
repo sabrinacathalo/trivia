@@ -11,7 +11,7 @@ class Game:
         self.science_questions = []
         self.sports_questions = []
         self.rock_questions = []
-        self.number_correct_question = 0;
+        self.number_correct_question = [];
         
         self.current_player = 0
         self.nextCategory = None
@@ -34,7 +34,7 @@ class Game:
         self.places[self.how_many_players] = 0
         self.purses[self.how_many_players] = 0
         self.in_penalty_box[self.how_many_players] = False
-
+        self.number_correct_question.append(0)
         print(player_name + " was added")
         print("They are player number %s" % len(self.players))
 
@@ -99,23 +99,10 @@ class Game:
         return 'Rock'
 
     def was_correctly_answered(self):
-
         self.nextCategory = None
         if self.in_penalty_box[self.current_player]:
             if self.is_getting_out_of_penalty_box:
                 print('Answer was correct!!!!')
-                self.number_correct_question += 1;
-                if(self.number_correct_question==3):
-                    choosenPlayer = False
-                    while choosenPlayer == False:
-                        print("Choose a player to send in prison between "+str(self.players));
-                        choosenPlayerName = input()
-                        if self.current_player != self.players.index(choosenPlayerName):
-                            print(self.players[int(choosenPlayer)] + " was sent to the penalty box")
-                            self.in_penalty_box[int(choosenPlayer)] = True
-                            choosenPlayer = True
-                        else :
-                            print("You can't send yourself to penalty box !")
                 self.purses[self.current_player] += 1
                 print(self.players[self.current_player] + \
                     ' now has ' + \
@@ -137,6 +124,20 @@ class Game:
         else:
 
             print("Answer was corrent!!!!")
+            self.number_correct_question[self.current_player] += 1;
+            print(self.number_correct_question)
+            if(self.number_correct_question[self.current_player]==3):
+                    choosenPlayer = False
+                    while choosenPlayer == False:
+                        print("Choose a player to send in prison between "+str(self.players));
+                        choosenPlayerName = input()
+                        if self.current_player != self.players.index(choosenPlayerName):
+                            print(self.players[int(choosenPlayer)] + " was sent to the penalty box")
+                            self.in_penalty_box[int(choosenPlayer)] = True
+                            choosenPlayer = True
+                            self.number_correct_question[self.current_player] = 0
+                        else :
+                            print("You can't send yourself to penalty box !")    
             self.purses[self.current_player] += 1
             print(self.players[self.current_player] + \
                 ' now has ' + \
