@@ -125,19 +125,20 @@ class Game:
 
             print("Answer was correct!!!!")
             self.number_correct_question[self.current_player] += 1;
-            print(self.number_correct_question)
             if(self.number_correct_question[self.current_player]==3):
-                    choosenPlayer = False
-                    while choosenPlayer == False:
+                    choosenPlayerName = ""
+                    while choosenPlayerName not in ["Chet", "Pat", "Sue"]:
                         print("Choose a player to send in prison between "+str(self.players));
-                        choosenPlayerName = input()
-                        if self.current_player != self.players.index(choosenPlayerName):
-                            print(self.players[int(choosenPlayer)] + " was sent to the penalty box")
-                            self.in_penalty_box[int(choosenPlayer)] = True
-                            choosenPlayer = True
-                            self.number_correct_question[self.current_player] = 0
-                        else :
-                            print("You can't send yourself to penalty box !")    
+                        choosenPlayerName = input("Choose ? : [Chet, Pat, Sue]" )
+                        try:
+                            if self.current_player == self.players.index(choosenPlayerName):
+                                print("You can't send yourself to penalty box !")  
+                                choosenPlayerName = ""
+                        except ValueError:
+                            print("Write a valid choice")
+                    print(self.players[self.players.index(choosenPlayerName)] + " was sent to the penalty box")
+                    self.in_penalty_box[self.players.index(choosenPlayerName)] = True
+                    self.number_correct_question[self.current_player] = 0
             self.purses[self.current_player] += 1
             print(self.players[self.current_player] + \
                 ' now has ' + \
