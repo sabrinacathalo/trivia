@@ -3,10 +3,10 @@
 class Game:
     def __init__(self):
         self.players = []
+        self.players_leaderboard = []
         self.places = [0] * 6
         self.purses = [0] * 6
         self.in_penalty_box = [0] * 6
-
         self.pop_questions = []
         self.science_questions = []
         self.sports_questions = []
@@ -157,9 +157,9 @@ class Game:
             self.number_correct_question[self.current_player] += 1;
             if(self.number_correct_question[self.current_player]==3):
                     choosenPlayerName = ""
-                    while choosenPlayerName not in ["Chet", "Pat", "Sue"]:
+                    while choosenPlayerName not in self.players:
                         print("Choose a player to send in prison between "+str(self.players));
-                        choosenPlayerName = input("Choose ? : [Chet, Pat, Sue]" )
+                        choosenPlayerName = input("Choose ? : "+str(self.players))
                         try:
                             if self.current_player == self.players.index(choosenPlayerName):
                                 print("You can't send yourself to penalty box !")
@@ -195,16 +195,20 @@ class Game:
         return True
 
     def _did_player_win(self):
-        return not (self.purses[self.current_player] == 6)
+        if self.purses[self.current_player] == 6:
+            self.players_leaderboard.append(self.current_player)
+            print(self.players[(self.current_player)] + ' a gagné !!!')
 
+        return not (self.purses[self.current_player] == 6 and len(self.players_leaderboard) == len(self.players))
 
+from gettext import bind_textdomain_codeset
 from random import randrange
 
 if __name__ == '__main__':
     not_a_winner = False
 
     game = Game()
-
+        
     game.add('Chet')
     game.add('Pat')
     game.add('Sue')
@@ -229,6 +233,7 @@ if __name__ == '__main__':
                 not_a_winner = game.was_correctly_answered()
 
         if not not_a_winner: break
-
-
-
+        
+    for x in game.players_leaderboard:
+        print(str(x+1) + 'st : ' + str(game.players[game.players_leaderboard[x-1]])) 
+  
