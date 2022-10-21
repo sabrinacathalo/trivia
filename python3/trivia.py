@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-import datetime
 
 class Game:
     def __init__(self):
@@ -13,7 +12,9 @@ class Game:
         self.sports_questions = []
         self.rock_questions = []
         self.number_correct_question = [];
-        
+
+        self.jocker_was_used = dict()
+
         self.current_player = 0
         self.nextCategory = None
         self.is_getting_out_of_penalty_box = False
@@ -36,6 +37,7 @@ class Game:
         self.purses[self.how_many_players] = 0
         self.in_penalty_box[self.how_many_players] = False
         self.number_correct_question.append(0)
+        self.jocker_was_used[self.how_many_players-1] = False
         print(player_name + " was added")
         print("They are player number %s" % len(self.players))
 
@@ -99,6 +101,35 @@ class Game:
         if self.places[self.current_player] == 10: return 'Sports'
         return 'Rock'
 
+    def was_jocker_used(self):
+
+        if (self.jocker_was_used[self.current_player] == False):
+            if self.in_penalty_box[self.current_player]:
+                if self.is_getting_out_of_penalty_box:
+                    print('Question was skipped')
+                    self.jocker_was_used[self.current_player] = True
+                    winner = self._did_player_win()
+                    self.current_player += 1
+                    if self.current_player == len(self.players): self.current_player = 0
+
+
+                    return winner
+                else:
+                    self.current_player += 1
+                    if self.current_player == len(self.players): self.current_player = 0
+                    return True
+            else:
+                print("Question was skipped")
+                winner = self._did_player_win()
+                self.jocker_was_used[self.current_player] = True
+                self.current_player += 1
+                if self.current_player == len(self.players): self.current_player = 0
+                return winner
+
+        if self.jocker_was_used[self.current_player]:
+            print("You have already use your jocker")
+            return True
+
     def was_correctly_answered(self):
         self.nextCategory = None
         if self.in_penalty_box[self.current_player]:
@@ -120,8 +151,6 @@ class Game:
                 if self.current_player == len(self.players): self.current_player = 0
                 return True
 
-
-
         else:
 
             print("Answer was correct!!!!")
@@ -133,7 +162,7 @@ class Game:
                         choosenPlayerName = input("Choose ? : "+str(self.players))
                         try:
                             if self.current_player == self.players.index(choosenPlayerName):
-                                print("You can't send yourself to penalty box !")  
+                                print("You can't send yourself to penalty box !")
                                 choosenPlayerName = ""
                         except ValueError:
                             print("Write a valid choice")
@@ -157,7 +186,7 @@ class Game:
 
         while self.nextCategory not in ["Pop", "Science", "Sports", "Rock"]:
             self.nextCategory = input("next category ? : [Pop, Science, Sports, Rock]" )
-        
+
         print(self.players[self.current_player] + " was sent to the penalty box")
         self.in_penalty_box[self.current_player] = True
 
@@ -185,15 +214,26 @@ if __name__ == '__main__':
     game.add('Sue')
 
     while True:
+
         game.roll(randrange(5) + 1)
 
-        if randrange(9) == 7:
-            not_a_winner = game.wrong_answer()
+        if game.jocker_was_used[game.current_player]:
+            jocker = 'N'
         else:
-            not_a_winner = game.was_correctly_answered()
+            jocker = input('skip question ? (Y/N) : ')
+            print(jocker)
+
+        if jocker == 'Y':
+            not_a_winner = game.was_jocker_used()
+
+        if jocker == 'N':
+            if randrange(9) == 7:
+                not_a_winner = game.wrong_answer()
+            else:
+                not_a_winner = game.was_correctly_answered()
 
         if not not_a_winner: break
         
     for x in game.players_leaderboard:
         print(str(x+1) + 'st : ' + str(game.players[game.players_leaderboard[x-1]])) 
-    
+  
