@@ -11,10 +11,23 @@ class Game:
         self.science_questions = []
         self.sports_questions = []
         self.rock_questions = []
+        self.categories = [
+            "Rock",
+            "Pop",
+            "Rap",
+            "Techno",
+            "Science",
+            "Sport",
+            "Philosophy",
+            "Litterature",
+            "Geography",
+            "People"
+        ]
+
         self.number_correct_question = [];
-        
+
         self.current_player = 0
-        self.nextCategory = None
+        self.current_player_category = []
         self.is_getting_out_of_penalty_box = False
 
         for i in range(50):
@@ -26,6 +39,24 @@ class Game:
     def create_rock_question(self, index):
         return "Rock Question %s" % index
 
+    def choose_category(self):
+        print('Veuillez choisir parmi la liste une catégorie : ')
+
+        for category in self.categories:
+            print(" - " + category)
+
+        chosen_category = input()
+
+        while chosen_category not in self.categories:
+            print("Cette catégorie n'existe pas.")
+            chosen_category = input()
+
+        print('Vous avez choisi la catégorie : ' + chosen_category)
+        return chosen_category
+
+    def get_category(self):
+        return self.current_player_category[self.current_player-2]
+
     def is_playable(self):
         return self.how_many_players >= 2
 
@@ -35,6 +66,8 @@ class Game:
         self.purses[self.how_many_players] = 0
         self.in_penalty_box[self.how_many_players] = False
         self.number_correct_question.append(0)
+        self.current_player_category.append(self.choose_category())
+
         print(player_name + " was added")
         print("They are player number %s" % len(self.players))
 
@@ -60,7 +93,7 @@ class Game:
                 print(self.players[self.current_player] + \
                             '\'s new location is ' + \
                             str(self.places[self.current_player]))
-                print("The category is %s" % self._current_category)
+                print("The category is %s" % self.get_category())
                 self._ask_question()
             else:
                 print("%s is not getting out of the penalty box" % self.players[self.current_player])
@@ -73,33 +106,16 @@ class Game:
             print(self.players[self.current_player] + \
                         '\'s new location is ' + \
                         str(self.places[self.current_player]))
-            print("The category is %s" % self._current_category)
+            print("The category is %s" % self.get_category())
             self._ask_question()
 
     def _ask_question(self):
-        if self._current_category == 'Pop': print(self.pop_questions.pop(0))
-        if self._current_category == 'Science': print(self.science_questions.pop(0))
-        if self._current_category == 'Sports': print(self.sports_questions.pop(0))
-        if self._current_category == 'Rock': print(self.rock_questions.pop(0))
-
-    @property
-    def _current_category(self):
-
-        if self.nextCategory is not None: return self.nextCategory
-
-        if self.places[self.current_player] == 0: return 'Pop'
-        if self.places[self.current_player] == 4: return 'Pop'
-        if self.places[self.current_player] == 8: return 'Pop'
-        if self.places[self.current_player] == 1: return 'Science'
-        if self.places[self.current_player] == 5: return 'Science'
-        if self.places[self.current_player] == 9: return 'Science'
-        if self.places[self.current_player] == 2: return 'Sports'
-        if self.places[self.current_player] == 6: return 'Sports'
-        if self.places[self.current_player] == 10: return 'Sports'
-        return 'Rock'
+        if self.current_player_category == 'Pop': print(self.pop_questions.pop(0))
+        if self.current_player_category == 'Science': print(self.science_questions.pop(0))
+        if self.current_player_category == 'Sports': print(self.sports_questions.pop(0))
+        if self.current_player_category == 'Rock': print(self.rock_questions.pop(0))
 
     def was_correctly_answered(self):
-        self.nextCategory = None
         if self.in_penalty_box[self.current_player]:
             if self.is_getting_out_of_penalty_box:
                 print('Answer was correct!!!!')
@@ -132,7 +148,7 @@ class Game:
                         choosenPlayerName = input("Choose ? : [Chet, Pat, Sue]" )
                         try:
                             if self.current_player == self.players.index(choosenPlayerName):
-                                print("You can't send yourself to penalty box !")  
+                                print("You can't send yourself to penalty box !")
                                 choosenPlayerName = ""
                         except ValueError:
                             print("Write a valid choice")
@@ -156,7 +172,7 @@ class Game:
 
         while self.nextCategory not in ["Pop", "Science", "Sports", "Rock"]:
             self.nextCategory = input("next category ? : [Pop, Science, Sports, Rock]" )
-        
+
         print(self.players[self.current_player] + " was sent to the penalty box")
         self.in_penalty_box[self.current_player] = True
 
